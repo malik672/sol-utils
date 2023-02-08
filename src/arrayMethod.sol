@@ -38,4 +38,24 @@ library Methods {
             }
         }
     }
+
+    ///@dev takes in an array of unsigned Integers and returns the minimum value in the array
+    ///@param arr takes in an array of unsigned Integers
+    function min(uint256[] memory arr) external pure returns (uint256 z) {
+        assembly {
+            //get where array is stored in memory
+            let location := arr
+
+            //get length of array
+            let length := mload(arr)
+
+            z := mload(add(location, 0x40))
+            //loop through array and return the minimum
+            for { let i := 0 } lt(i, length) { i := add(i, 1) } {
+                if gt(z, mload(add(add(location, 0x20), mul(0x20, i)))) {
+                    z := mload(add(add(location, 0x20), mul(0x20, i)))
+                }
+            }
+        }
+    }
 }
