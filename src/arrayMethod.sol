@@ -62,7 +62,7 @@ library Methods {
     ///@notice The find() method returns the first element in the provided array that satisfies the provided testing function. If no values satisfy the testing function, undefined is returned.
     ///@dev takes in an array of unsigned Integers and returns the minimum value in the array
     ///@param arr takes in an array of unsigned Integers
-    function find(uint256[] memory arr, uint _val) external pure returns (uint256 z) {
+    function find(uint256[] memory arr, uint256 _val) external pure returns (uint256 z) {
         assembly {
             //get where array is stored in memory
             let location := arr
@@ -76,5 +76,30 @@ library Methods {
                 }
             }
         }
+    }
+
+    ///@dev takes in an array of unsigned Integers and returns the sorted value in ascending order
+    ///@param arr takes in an array of unsigned Integers
+    function ascendingSort(uint256[] memory arr) external pure returns (uint256[] memory) {
+        assembly {
+            //get where array is stored in memory
+            let location := arr
+
+            //get length of array
+            let length := mload(arr)
+
+            //loop through array and return the sorted array
+            for { let i := 0 } lt(i, length) { i := add(i, 1) } {
+                for { let j := add(i, 1) } lt(j, length) { j := add(j, 1) } {
+                    if gt(mload(add(add(location, 0x20), mul(0x20, i))), mload(add(add(location, 0x20), mul(0x20, j))))
+                    {
+                        let z := mload(add(add(location, 0x20), mul(0x20, i)))
+                        mstore(add(add(location, 0x20), mul(0x20, i)), mload(add(add(location, 0x20), mul(0x20, j))))
+                        mstore(add(add(location, 0x20), mul(0x20, j)), z)
+                    }
+                }
+            }
+        }
+        return arr;
     }
 }
