@@ -102,7 +102,7 @@ library Methods {
         }
         return arr;
     }
-    
+
     ///@dev takes in an array of unsigned Integers and returns the sorted value in descending order
     ///@param arr takes in an array of unsigned Integers
     function descendingSort(uint256[] memory arr) external pure returns (uint256[] memory) {
@@ -128,4 +128,18 @@ library Methods {
         return arr;
     }
 
+    ///@dev takes in an array of unsigned Integers and returns the index of the element specid
+    ///@param arr takes in an array of unsigned Integers
+    function indexOf(uint256[] memory arr, uint256 index) external pure returns (uint256 z) {
+        assembly {
+            //get where array is stored in memory
+            let location := arr
+
+            //get length of array
+            let length := mload(arr)
+            for { let i := 0 } lt(i, length) { i := add(i, 1) } {
+                if eq(index, mload(add(add(location, 0x20), mul(0x20, i)))) { z := i }
+            }
+        }
+    }
 }
