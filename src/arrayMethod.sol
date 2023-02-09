@@ -58,4 +58,23 @@ library Methods {
             }
         }
     }
+
+    ///@notice The find() method returns the first element in the provided array that satisfies the provided testing function. If no values satisfy the testing function, undefined is returned.
+    ///@dev takes in an array of unsigned Integers and returns the minimum value in the array
+    ///@param arr takes in an array of unsigned Integers
+    function find(uint256[] memory arr, uint _val) external pure returns (uint256 z) {
+        assembly {
+            //get where array is stored in memory
+            let location := arr
+
+            //get length of array
+            let length := mload(arr)
+
+            for { let i := 0 } lt(i, length) { i := add(i, 1) } {
+                if lt(_val, mload(add(add(location, 0x20), mul(0x20, i)))) {
+                    return(add(add(location, 0x20), mul(0x20, i)), 0x20)
+                }
+            }
+        }
+    }
 }
