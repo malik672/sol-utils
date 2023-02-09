@@ -102,4 +102,30 @@ library Methods {
         }
         return arr;
     }
+    
+    ///@dev takes in an array of unsigned Integers and returns the sorted value in descending order
+    ///@param arr takes in an array of unsigned Integers
+    function descendingSort(uint256[] memory arr) external pure returns (uint256[] memory) {
+        assembly {
+            //get where array is stored in memory
+            let location := arr
+
+            //get length of array
+            let length := mload(arr)
+
+            //loop through array and return the sorted array
+            for { let i := 0 } lt(i, length) { i := add(i, 1) } {
+                for { let j := add(i, 1) } lt(j, length) { j := add(j, 1) } {
+                    if lt(mload(add(add(location, 0x20), mul(0x20, i))), mload(add(add(location, 0x20), mul(0x20, j))))
+                    {
+                        let z := mload(add(add(location, 0x20), mul(0x20, i)))
+                        mstore(add(add(location, 0x20), mul(0x20, i)), mload(add(add(location, 0x20), mul(0x20, j))))
+                        mstore(add(add(location, 0x20), mul(0x20, j)), z)
+                    }
+                }
+            }
+        }
+        return arr;
+    }
+
 }
