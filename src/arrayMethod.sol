@@ -146,7 +146,7 @@ library Methods {
     ///@dev takes in array an array and a function and return a the filtered item in a new array
     ///@param arr takes in array of unsigned Integers
     ///@param func takes in a func as a parameter
-    function filter(uint256[] memory arr, function(uint256[] memory) external pure func)
+    function filter(uint256[] memory arr, function(uint256) external pure func)
         external
         pure
         returns (uint256 z)
