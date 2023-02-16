@@ -2,24 +2,6 @@
 pragma solidity ^0.8.13;
 
 library Methods {
-    ///@dev takes in an array of unsigned Integers and returns a loop
-    ///@param arr takes in an array of unsigned Integers
-    function forEach(uint256[] memory arr, function (uint256) pure external returns (uint256) func)
-        public
-        returns (uint256[] memory)
-    {
-        assembly {
-            //get where array is stored in memory
-            let location := arr
-
-            //get length of array
-            let length := mload(arr)
-
-            //loop through array
-            for { let i := 0 } lt(i, length) { i := add(i, 1) } { z := mload(add(add(location, 0x20), mul(0x20, i))) }
-        }
-    }
-
     ///@dev takes in an array of unsigned Integers and returns the maximum value in the array
     ///@param arr takes in an array of unsigned Integers
     function max(uint256[] memory arr) external pure returns (uint256 z) {
@@ -146,12 +128,8 @@ library Methods {
     ///@dev takes in array an array and a function and return a the filtered item in a new array
     ///@param arr takes in array of unsigned Integers
     ///@param func takes in a func as a parameter
-    function filter(uint256[] memory arr, function(uint256) external pure func)
-        external
-        pure
-        returns (uint256 z)
-    {
-        assembly{
+    function filter(uint256[] memory arr, function(uint256) external pure func) external pure returns (uint256 z) {
+        assembly {
             //get where array is stored in array
             let location := arr
 
@@ -160,5 +138,63 @@ library Methods {
 
             //
         }
+    }
+
+    // inserts element into array at index
+    function insert(uint256[] memory arr, uint256 newVal, uint256 index) public pure returns (uint256[] memory) {
+        assembly {
+            // where array is stored in memory
+            let location := arr
+            // length of array is stored at arr
+            let length := mload(arr)
+            // gets next available memory location
+            let nextMemoryLocation := add(add(location, 0x20), mul(length, 0x20))
+
+            // fre memory pointer
+            let freeMem := mload(0x40)
+            // advance msize()
+            let newMsize := add(freeMem, 0x20)
+
+            // location we want to insert element
+            let targetLocation := add(add(location, 0x20), mul(index, 0x20))
+
+            let currVal
+            let prevVal
+            for { let i := targetLocation } lt(i, newMsize) { i := add(i, 0x20) } {
+                currVal := mload(i)
+                mstore(i, prevVal)
+                prevVal := currVal
+            }
+            // stores new value to memory
+            mstore(targetLocation, newVal)
+            // increment length by 1
+            length := add(length, 1)
+            // store new length value
+            mstore(location, length)
+            // update free memory pointer
+            mstore(0x40, newMsize)
+        }
+        return arr;
+    }
+
+    // removes element from array at index
+    function remove(uint256[] memory arr, uint256 index) public pure returns (uint256[] memory) {
+        assembly {
+            // where array is stored in memory
+            let location := arr
+            // length of array is stored at arr
+            let length := mload(arr)
+            // free memory pointer
+            let freeMemPntr := mload(0x40)
+            // location of element being removed
+            let targetLocation := add(add(location, 0x20), mul(index, 0x20))
+            for { let i := targetLocation } lt(i, freeMemPntr) { i := add(i, 0x20) } {
+                let nextVal := mload(add(i, 0x20))
+                mstore(i, nextVal)
+            }
+            length := sub(length, 1)
+            mstore(location, length)
+        }
+        return arr;
     }
 }
