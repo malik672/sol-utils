@@ -2,6 +2,7 @@
 pragma solidity ^0.8.13;
 
 library Bits {
+    //function to get the MSB for a particular integer
     function msb(uint256 x) public pure returns (uint256) {
         uint256 msbs;
         assembly {
@@ -17,4 +18,6 @@ library Bits {
             return(0x80, 0x20) // return msb from memory location 0x80 with size 0x20 bytes
         }
     }
+
+    //function to swap two bitst
 }

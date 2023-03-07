@@ -197,4 +197,15 @@ library Methods {
         }
         return arr;
     }
+
+    //replace a value in the array with another
+    function replace(uint[] memory arr, uint index, uint value) pure public returns(uint[] memory){
+        assembly{
+            let location := arr
+            let length := mload(arr)
+            mstore(add(add(0x20, location), mul(index, 0x20)), value)
+            mstore(0x00, location)
+            return(0x00, mload(0x40))
+        }
+    }
 }
