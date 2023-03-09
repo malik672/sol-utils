@@ -2,6 +2,7 @@
 pragma solidity ^0.8.13;
 
 library stringMethod {
+    //concatenation of two strings, just like abi.encodePacked();
     function concatenate(string memory a, string memory b) public pure returns (string memory) {
         assembly {
             let location := a
@@ -30,6 +31,18 @@ library stringMethod {
                 mstore(0x00, 0x00)
                 return(0x00, 0x20)
             }
+        }
+    }
+
+    //comparison of two strings
+    function comparison(string memory _a, string memory _b) public pure returns (bool) {
+        assembly {
+            if eq(mload(add(_a, 0x20)), mload(add(_b, 0x20))) {
+                mstore(0x00, 0x01)
+                return(0x00, 0x20)
+            }
+            mstore(0x00, 0x00)
+            return(0x00, 0x20)
         }
     }
 }
