@@ -45,4 +45,18 @@ library stringMethod {
             return(0x00, 0x20)
         }
     }
+
+    function slice(string memory text, uint256 start, uint256 end) public pure returns (string memory) {
+        assembly {
+            let length := mload(text)
+            let location := add(text, 0x20)
+            mstore(location, shl(mul(start, 8), mload(location)))
+            length := sub(length, start)
+            mstore(location, shr(mul(end, 8), shr(sub(256, mul(length, 8)), mload(location))))
+            mstore(text, sub(length, end))
+            mstore(location, shl(sub(256, mul(8, mload(text))), mload(location)))
+            mstore(0x00, text)
+            return(0x00, add(location, 0x20))
+        }
+    }
 }
