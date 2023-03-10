@@ -1,8 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
+/// @title A library for string operations
 library stringMethod {
-    //concatenation of two strings, just like abi.encodePacked();
+    /// @notice Concatenates two strings
+    /// @param a The first string
+    /// @param b The second string
+    /// @return result The concatenated string
     function concatenate(string memory a, string memory b) public pure returns (string memory) {
         assembly {
             let location := a
@@ -17,7 +21,10 @@ library stringMethod {
         }
     }
 
-    //function that checks if a particular string is present in a particular array
+    /// @notice Searches am array and return 1 if found else 0
+    /// @param strings an array of strings
+    /// @param  check the string we are searching for
+    /// @return uint returms either 1 or 0    
     function matches(string[] memory strings, string memory check) public pure returns (uint256) {
         assembly {
             let location := strings
