@@ -9,7 +9,7 @@ library stringMethod {
     /// @return result The concatenated string
     function concatenate(string memory a, string memory b) internal pure returns (string memory) {
         assembly {
-            //pointer to string a 
+            //pointer to string a
             let location := a
             //length of string a
             let length := mload(a)
@@ -33,7 +33,7 @@ library stringMethod {
     /// @notice Searches am array and return 1 if found else 0
     /// @param strings an array of strings
     /// @param  check the string we are searching for
-    /// @return uint returms either 1 or 0    
+    /// @return uint returms either 1 or 0
     function matches(string[] memory strings, string memory check) internal pure returns (uint256) {
         assembly {
             let location := strings
@@ -50,7 +50,8 @@ library stringMethod {
         }
     }
 
-    //comparison of two strings
+    ///@notice comparison of two strings
+    ///@note this only works for strings that are less than or equal to 32bytes if it will be incorrect e.g abcdefghijklmnopqrstuvqxyz0123456789! == abcdefghijklmnopqrstuvqxyz0123456789 will give true instead of false since its larger than 32
     function comparison(string memory _a, string memory _b) internal pure returns (bool) {
         assembly {
             if eq(mload(add(_a, 0x20)), mload(add(_b, 0x20))) {
@@ -76,12 +77,37 @@ library stringMethod {
             mstore(location, shr(mul(end, 8), shr(sub(256, mul(length, 8)), mload(location))))
             //update the length again
             mstore(text, sub(length, end))
-            //shift the string to the first position 
+            //shift the string to the first position
             mstore(location, shl(sub(256, mul(8, mload(text))), mload(location)))
-            //save the length 
+            //save the length
             mstore(0x00, text)
             //return the sliced string
             return(0x00, add(location, 0x20))
+        }
+    }
+
+    ///@notice reverses a string
+    /// @param strings a string to be reversed
+    ///@note this function is slightly incorrect,it works on string without error, also it creates a double string in memory
+    function reverses(string memory text) public pure returns (string memory) {
+        assembly {
+            // load data length
+            let len := mload(text)
+            // load data pointer
+            let ptr := add(text, 0x20)
+
+            let strin := mload(ptr)
+
+            //set strin to zero emptying the memory slot
+            mstore(ptr, 0x00)
+            // loop over each bit
+            for { let i := 0 } lt(i, len) {} {
+                i := add(i, 1)
+                mstore(add(ptr, sub(i, 1)), shl(mul(sub(len, i), 8), strin))
+                // if eq(i,3){break}
+            }
+            mstore(0x00, text)
+            return(0x00, add(ptr, 0x20))
         }
     }
 }
