@@ -3,11 +3,11 @@ pragma solidity ^0.8.13;
 
 /// @title A library for string operations
 library stringMethod {
-    /// @notice Concatenates two strings
+    /// @notice Concatenates two strings, this only works for string when combined is equal to 32byte else it goes out of bounds
     /// @param a The fit string
     /// @param b The second string
     /// @return result The concatenated string
-    function concatenate(string memory a, string memory b) internal pure returns (string memory) {
+    function concatenate32(string memory a, string memory b) internal pure returns (string memory) {
         assembly {
             //pointer to string a
             let location := a
@@ -51,8 +51,8 @@ library stringMethod {
     }
 
     ///@notice comparison of two strings
-    ///@note this only works for strings that are less than or equal to 32bytes if it will be incorrect e.g abcdefghijklmnopqrstuvqxyz0123456789! == abcdefghijklmnopqrstuvqxyz0123456789 will give true instead of false since its larger than 32
-    function comparison(string memory _a, string memory _b) internal pure returns (bool) {
+    ///@dev this only works for strings that are less than or equal to 32bytes if it will be incorrect e.g abcdefghijklmnopqrstuvqxyz0123456789! == abcdefghijklmnopqrstuvqxyz0123456789 will give true instead of false since its larger than 32
+    function comparison32(string memory _a, string memory _b) internal pure returns (bool) {
         assembly {
             if eq(mload(add(_a, 0x20)), mload(add(_b, 0x20))) {
                 mstore(0x00, 0x01)
@@ -63,7 +63,7 @@ library stringMethod {
         }
     }
 
-    function slice(string memory text, uint256 start, uint256 end) internal pure returns (string memory) {
+    function slice32(string memory text, uint256 start, uint256 end) internal pure returns (string memory) {
         assembly {
             // load data length
             let length := mload(text)
@@ -87,9 +87,9 @@ library stringMethod {
     }
 
     ///@notice reverses a string
-    /// @param strings a string to be reversed
-    ///@note this function is slightly incorrect,it works on string without error, also it creates a double string in memory
-    function reverses(string memory text) public pure returns (string memory) {
+    /// @param text a string to be reversed
+    ///@dev this function is slightly incorrect,it works on string without error, also it creates a double string in memory
+    function reverses16(string memory text) public pure returns (string memory) {
         assembly {
             // load data length
             let len := mload(text)
