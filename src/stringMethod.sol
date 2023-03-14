@@ -3,35 +3,9 @@ pragma solidity ^0.8.13;
 
 /// @title A library for string operations
 library stringMethod {
-    /// @notice Concatenates two strings, this only works for string when combined is equal to 32byte else it goes out of bounds
-    /// @param a The fit string
-    /// @param b The second string
-    /// @return result The concatenated string
-    function concatenate32(string memory a, string memory b) internal pure returns (string memory) {
-        assembly {
-            //pointer to string a
-            let location := a
-            //length of string a
-            let length := mload(a)
-            //pointer of string b
-            let locationB := b
-            //leength of string b
-            let lengthB := mload(b)
-            //add length of both string together and store in location of length of string a
-            mstore(location, add(length, lengthB))
-            //store string b immediately after string a
-            mstore(add(add(location, 0x20), length), mload(add(locationB, 0x20)))
-            //update the free memory
-            mstore(0x40, add(location, 0x40))
-            //save the length
-            mstore(0x00, location)
-            //return the string
-            return(0x00, mload(0x40))
-        }
-    }
-
     /// @notice Searches am array and return 1 if found else 0
     /// @param strings an array of strings
+
     /// @param  check the string we are searching for
     /// @return uint returms either 1 or 0
     function matches(string[] memory strings, string memory check) internal pure returns (uint256) {
@@ -47,19 +21,6 @@ library stringMethod {
                 mstore(0x00, 0x00)
                 return(0x00, 0x20)
             }
-        }
-    }
-
-    ///@notice comparison of two strings
-    ///@dev this only works for strings that are less than or equal to 32bytes if it will be incorrect e.g abcdefghijklmnopqrstuvqxyz0123456789! == abcdefghijklmnopqrstuvqxyz0123456789 will give true instead of false since its larger than 32
-    function comparison32(string memory _a, string memory _b) internal pure returns (bool) {
-        assembly {
-            if eq(mload(add(_a, 0x20)), mload(add(_b, 0x20))) {
-                mstore(0x00, 0x01)
-                return(0x00, 0x20)
-            }
-            mstore(0x00, 0x00)
-            return(0x00, 0x20)
         }
     }
 
@@ -108,6 +69,50 @@ library stringMethod {
             }
             mstore(0x00, text)
             return(0x00, add(ptr, 0x20))
+        }
+    }
+    /// @notice Concatenates two strings, this only works for string when combined is equal to 32byte else it goes out of bounds
+    /// @param a The fit string
+    /// @param b The second string
+    /// @return result The concatenated string
+    function concatenate(string memory a, string memory b) public pure returns (string memory) {
+        assembly {
+            let red := 0x20
+            //pointer to string a
+            let ptr := a
+            //length of string a
+            let len := mload(a)
+            //pointer of string b
+            let ptrB := b
+            //leength of string b
+            let lenB := mload(b)
+            //add length of both string together and store in location of length of string a
+            mstore(ptr, add(len, lenB))
+            //no of times memory was used
+            let Mem := div(sub(add(mload(a), 0x20), 1), 0x20)
+            //this will work for string thats has its length of B less than 32bytes
+            if lt(lenB, 33) {
+                //add length of both string together and store in location of length of string a
+                mstore(add(add(ptr, 0x20), len), mload(add(ptrB, 0x20)))
+                //update the free memory
+                mstore(0x40, add(add(ptr, 0x20), mul(Mem, 0x20)))
+                //save the length
+                mstore(0x00, ptr)
+                //return the string
+                return(0x00, mload(0x40))
+            }
+            //add length of both string together and store in location of length of string a
+            mstore(add(add(ptr, 0x20), len), mload(add(ptrB, 0x20)))
+
+            //loop through and store b immeadiately after b
+            for { let i := 1 } lt(i, Mem) { i := add(i, 1) } {
+                mstore(add(ptr, add(mul(i, 0x20), len)), mload(add(ptrB, mul(i, 0x20))))
+            }
+            //update the free memory
+            //save the length
+            mstore(0x00, ptr)
+            //return the string
+            return(0x00, mload(0x40))
         }
     }
 }
