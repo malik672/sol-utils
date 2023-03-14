@@ -5,7 +5,6 @@ pragma solidity ^0.8.13;
 library stringMethod {
     /// @notice Searches am array and return 1 if found else 0
     /// @param strings an array of strings
-
     /// @param  check the string we are searching for
     /// @return uint returms either 1 or 0
     function matches(string[] memory strings, string memory check) internal pure returns (uint256) {
@@ -23,27 +22,30 @@ library stringMethod {
             }
         }
     }
-
-    function slice32(string memory text, uint256 start, uint256 end) internal pure returns (string memory) {
+ 
+    /// @notice slice the string based on params end and start
+    /// @param text string to be sliced
+    /// @param start the beginning idk
+    /// @param end  the end idk
+    /// @return uint returns the sliced string
+    function slice(string memory text, uint256 start, uint256 end) public pure returns (string memory) {
         assembly {
             // load data length
             let length := mload(text)
             // load data pointer
             let location := add(text, 0x20)
-            //since each string contain 8 bits we simply remove the starting string by shifing to the left 8 times
+            //removes the end part of text by setting it to zero. This effectively truncates text to have only the characters from 0 to end
+            mstore(add(location, sub(length, end)), 0x00)
+            //since each string contain 8 bits we simply remove the starting string by shifing to the left 8 times start
             mstore(location, shl(mul(start, 8), mload(location)))
             //update the length
-            length := sub(length, start)
-            //now remove the specified end part
-            mstore(location, shr(mul(end, 8), shr(sub(256, mul(length, 8)), mload(location))))
-            //update the length again
-            mstore(text, sub(length, end))
-            //shift the string to the first position
-            mstore(location, shl(sub(256, mul(8, mload(text))), mload(location)))
+            length := sub(length, add(end, start))
+            //store length
+            mstore(text, length)
             //save the length
             mstore(0x00, text)
             //return the sliced string
-            return(0x00, add(location, 0x20))
+            return(0x00, mload(0x40))
         }
     }
 
@@ -71,7 +73,8 @@ library stringMethod {
             return(0x00, add(ptr, 0x20))
         }
     }
-    /// @notice Concatenates two strings, this only works for string when combined is equal to 32byte else it goes out of bounds
+    
+    /// @notice Concatenates two strings
     /// @param a The fit string
     /// @param b The second string
     /// @return result The concatenated string
