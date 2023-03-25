@@ -1,4 +1,4 @@
-# Sol-array
+# Sol-utils
 Bunch of random shit in solidity
 ## StringMethod Library
 This is a Solidity library that provides various methods for working with strings. The library contains the following functions:
@@ -61,4 +61,4 @@ contract MyContract {
 
 }
 ```
- **NOTE**: This methods modify the original string in memory, once you use them they strings no longer exist
+ **NOTE**: This methods modify the original string in memory, once you use them the original strings no longer exist
