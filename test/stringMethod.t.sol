@@ -38,5 +38,9 @@ contract strings is Test {
             "Why did the chicken cross the road? To get to the other side!",
             stringMethod.concatenate("Why did the chicken cross the road? ", "To get to the other side!")
         );
+        assertEq(
+            "The first technique for implementing a predictive parser is called recursive-descent. A recursive descent parser consists of several small functions",
+            stringMethod.concatenate("The first technique for implementing a predictive parser is called recursive-descent.", " A recursive descent parser consists of several small functions")
+        );
     }
 }

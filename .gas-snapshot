@@ -1,0 +1,2 @@
+strings:testConcatenate() (gas: 13911)
+strings:testSlice() (gas: 33779)

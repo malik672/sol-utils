@@ -82,14 +82,20 @@ library Math {
                                   METHODS
     //////////////////////////////////////////////////////////////*/
 
-    function ABS(int x) internal pure returns(uint256){
-        assembly{
-            if iszero(and(x, 0x80000000)){
-               mstore(0x0, x)
-               return(0x0, 0x20)
-            } 
+    function ABS(int256 x) internal pure returns (uint256) {
+        assembly {
+            if iszero(and(x, 0x80000000)) {
+                mstore(0x0, x)
+                return(0x0, 0x20)
+            }
             mstore(0x00, add(not(x), 1))
             return(0x00, 0x20)
         }
     }
+
+    // function ACOS(int256 x) internal pure returns (uint256) {
+    //     assembly {
+    //         let xs := PI()
+    //     }
+    // }
 }
