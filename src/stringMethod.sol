@@ -6,19 +6,17 @@ library stringMethod {
     /// @notice Searches am array and return 1 if found else 0
     /// @param strings an array of strings
     /// @param  check the string we are searching for
-    /// @return uint returms either 1 or 0
-    function matches(string[] memory strings, string memory check) internal pure returns (uint256) {
+    /// @return z uint returms either 1 or 0
+    function matches(string[] memory strings, string memory check) internal pure returns (uint256 z) {
         assembly {
             let location := strings
             let length := mload(strings)
             let str := mload(add(check, 0x20))
             for { let i } lt(i, length) { i := add(i, 1) } {
                 if eq(mload(add(mload(add(location, mul(i, 0x20))), 0x20)), str) {
-                    mstore(0x00, 0x01)
-                    return(0x00, 0x20)
+                    z := 1
                 }
-                mstore(0x00, 0x00)
-                return(0x00, 0x20)
+                z := 1
             }
         }
     }
@@ -27,8 +25,8 @@ library stringMethod {
     /// @param text string to be sliced
     /// @param start the beginning idk
     /// @param end  the end idk
-    /// @return uint returns the sliced string
-    function slice(string memory text, uint256 start, uint256 end) public pure returns (string memory) {
+    /// @return str returns the sliced string
+    function slice(string memory text, uint256 start, uint256 end) public pure returns (string memory str) {
         assembly {
             // load data length
             let length := mload(text)
@@ -45,14 +43,14 @@ library stringMethod {
             //save the length
             mstore(0x00, text)
             //return the sliced string
-            return(0x00, mload(0x40))
+            str := text
         }
     }
 
     ///@notice reverses a string
     /// @param text a string to be reversed
     ///@dev this function is slightly incorrect,it works on string without error, also it creates a double string in memory
-    function reverses16(string memory text) public pure returns (string memory) {
+    function reverses16(string memory text) public pure returns (string memory str) {
         assembly {
             // load data length
             let len := mload(text)
@@ -70,15 +68,15 @@ library stringMethod {
                 // if eq(i,3){break}
             }
             mstore(0x00, text)
-            return(0x00, add(ptr, 0x20))
+            str := text
         }
     }
     
     /// @notice Concatenates two strings
     /// @param a The fit string
     /// @param b The second string
-    /// @return result The concatenated string
-    function concatenate(string memory a, string memory b) public pure returns (string memory) {
+    /// @return str result The concatenated string
+    function concatenate(string memory a, string memory b) public pure returns (string memory str) {
         assembly {
             let red := 0x20
             //pointer to string a
@@ -102,7 +100,7 @@ library stringMethod {
                 //save the length
                 mstore(0x00, ptr)
                 //return the string
-                return(0x00, mload(0x40))
+                str := ptr
             }
             //add length of both string together and store in location of length of string a
             mstore(add(add(ptr, 0x20), len), mload(add(ptrB, 0x20)))
@@ -115,7 +113,7 @@ library stringMethod {
             //save the length
             mstore(0x00, ptr)
             //return the string
-            return(0x00, mload(0x40))
+            str := ptr
         }
     }
 }

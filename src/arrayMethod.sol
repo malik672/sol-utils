@@ -16,7 +16,7 @@ library arrayMethods {
             for { let i := 0 } lt(i, length) { i := add(i, 1) } {
                 if gt(z, mload(add(add(location, 0x20), mul(0x20, i)))) {
                   mstore(0x00, mload(add(add(location, 0x20), mul(0x20, i))))
-                  return(0x00, 0x20)
+                  z := mload(0x00)
                 }
             }
         }

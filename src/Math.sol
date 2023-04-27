@@ -6,75 +6,60 @@ library Math {
                                   PROPERTIES
     //////////////////////////////////////////////////////////////*/
 
-    /// @return uint256 euler number
-    function E() internal pure returns (uint256) {
+    /// @return z uint256 euler number
+    function E() internal pure returns (uint256 z) {
         assembly {
-            let Euler := 2718281828459045235
-            mstore(0x0, Euler)
-            return(0x00, 0x20)
+            z := 2718281828459045235
         }
     }
 
-    /// @return uint256 natural logarithm of 10
-    function LN10() internal pure returns (uint256) {
+    /// @return z uint256 natural logarithm of 10
+    function LN10() internal pure returns (uint256 z) {
         assembly {
-            let log := 2302585092994046
-            mstore(0x0, log)
-            return(0x00, 0x20)
+            z := 2302585092994046
+      
         }
     }
 
-    /// @return uint256 natural logarithm of 2
-    function LN2() internal pure returns (uint256) {
+    /// @return z uint256 natural logarithm of 2
+    function LN2() internal pure returns (uint256 z) {
         assembly {
-            let log := 0xF0E1D7341A74C5
-            mstore(0x0, log)
-            return(0x00, 0x20)
+            z := 0xF0E1D7341A74C5
         }
     }
 
-    /// @return uint256 base 10 logarithm of euler number
-    function L0G10E() internal pure returns (uint256) {
+    /// @return z uint256 base 10 logarithm of euler number
+    function L0G10E() internal pure returns (uint256 z) {
         assembly {
-            let log := 0x97A15D47F734F6
-            mstore(0x0, log)
-            return(0x00, 0x20)
+            z := 0x97A15D47F734F6
         }
     }
 
-    /// @return uint256 base 2 logarithm of euler number
-    function L0G2E() internal pure returns (uint256) {
+    /// @return z uint256 base 2 logarithm of euler number
+    function L0G2E() internal pure returns (uint256 z) {
         assembly {
-            let log := 14426950408889634
-            mstore(0x0, log)
-            return(0x00, 0x20)
+            z := 14426950408889634
         }
     }
 
-    /// @return uint256 constant PI
-    function PI() internal pure returns (uint256) {
+    /// @return z uint256 constant PI
+    function PI() internal pure returns (uint256 z) {
         assembly {
-            let pi := 3141592653589793
-            mstore(0x0, pi)
-            return(0x00, 0x20)
+            z := 3141592653589793
         }
     }
 
-    /// @return uint256 the square root of 1/2
-    function SQRT1_2() internal pure returns (uint256) {
+    /// @return z uint256 the square root of 1/2
+    function SQRT1_2() internal pure returns (uint256 z) {
         assembly {
-            let sqrt1_2 := 7071067811865476
-            mstore(0x0, sqrt1_2)
-            return(0x00, 0x20)
+            z := 7071067811865476
         }
     }
 
-    /// @return uint256 the square root of 2
-    function SQRT2() internal pure returns (uint256) {
+    /// @return z uint256 the square root of 2
+    function SQRT2() internal pure returns (uint256 z) {
         assembly {
-            let sqrt2 := 14142135623730951
-            mstore(0x0, sqrt2)
-            return(0x00, 0x20)
+            z := 14142135623730951
         }
     }
 
@@ -82,14 +67,12 @@ library Math {
                                   METHODS
     //////////////////////////////////////////////////////////////*/
 
-    function ABS(int256 x) internal pure returns (uint256) {
+    function ABS(int256 x) internal pure returns (uint256 z) {
         assembly {
             if iszero(and(x, 0x80000000)) {
-                mstore(0x0, x)
-                return(0x0, 0x20)
+                z := x
             }
-            mstore(0x00, add(not(x), 1))
-            return(0x00, 0x20)
+            z := add(not(x), 1)
         }
     }
 
