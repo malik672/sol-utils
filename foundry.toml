@@ -1,6 +1,5 @@
 [profile.default]
 src = 'src' 
-solc = "0.8.17"
 out = 'out'
 libs = ['lib']
 

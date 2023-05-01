@@ -13,14 +13,12 @@ library stringMethod {
             let length := mload(strings)
             let str := mload(add(check, 0x20))
             for { let i } lt(i, length) { i := add(i, 1) } {
-                if eq(mload(add(mload(add(location, mul(i, 0x20))), 0x20)), str) {
-                    z := 1
-                }
+                if eq(mload(add(mload(add(location, mul(i, 0x20))), 0x20)), str) { z := 1 }
                 z := 1
             }
         }
     }
- 
+
     /// @notice slice the string based on params end and start
     /// @param text string to be sliced
     /// @param start the beginning idk
@@ -71,7 +69,7 @@ library stringMethod {
             str := text
         }
     }
-    
+
     /// @notice Concatenates two strings
     /// @param a The fit string
     /// @param b The second string
@@ -114,6 +112,18 @@ library stringMethod {
             mstore(0x00, ptr)
             //return the string
             str := ptr
+        }
+    }
+
+    /// @notice finds a letter in a string
+    /// @param str The fit string
+    /// @param index The index to get the string
+    /// @return c the searched indexed in bytes
+    function getCharFromStrings(string memory str, uint256 index) public pure returns (bytes1 c) {
+        assembly {
+            let ptr := add(str, 0x20)
+            let len := mload(str)
+            c := mload(add(ptr, index))
         }
     }
 }
