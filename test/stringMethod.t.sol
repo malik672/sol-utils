@@ -31,6 +31,7 @@ contract strings is Test {
 
     //this function joins two atrings together
     function testConcatenate() public {
+        assertEq("at", stringMethod.concatenate("a", "t"));
         assertEq("red", stringMethod.concatenate("r", "ed"));
         assertEq("universe", stringMethod.concatenate("uni", "verse"));
         assertEq("blue whale", stringMethod.concatenate("blue", " whale"));

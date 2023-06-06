@@ -6,15 +6,15 @@ library stringMethod {
     /// @notice Searches am array and return 1 if found else 0
     /// @param strings an array of strings
     /// @param  check the string we are searching for
-    /// @return z uint returms either 1 or 0
-    function matches(string[] memory strings, string memory check) internal pure returns (uint256 z) {
+    /// @return _matches uint returms either 1 or 0
+    function matches(string[] memory strings, string memory check) internal pure returns (uint256 _matches) {
         assembly {
             let location := strings
             let length := mload(strings)
             let str := mload(add(check, 0x20))
             for { let i } lt(i, length) { i := add(i, 1) } {
-                if eq(mload(add(mload(add(location, mul(i, 0x20))), 0x20)), str) { z := 1 }
-                z := 1
+                if eq(mload(add(mload(add(location, mul(i, 0x20))), 0x20)), str) { _matches := 1 }
+                _matches := 1
             }
         }
     }
@@ -23,8 +23,8 @@ library stringMethod {
     /// @param text string to be sliced
     /// @param start the beginning idk
     /// @param end  the end idk
-    /// @return str returns the sliced string
-    function slice(string memory text, uint256 start, uint256 end) public pure returns (string memory str) {
+    /// @return _slice returns the sliced string
+    function slice(string memory text, uint256 start, uint256 end) public pure returns (string memory _slice) {
         assembly {
             // load data length
             let length := mload(text)
@@ -38,17 +38,15 @@ library stringMethod {
             length := sub(length, add(end, start))
             //store length
             mstore(text, length)
-            //save the length
-            mstore(0x00, text)
             //return the sliced string
-            str := text
+            _slice := text
         }
     }
 
     ///@notice reverses a string
     /// @param text a string to be reversed
     ///@dev this function is slightly incorrect,it works on string without error, also it creates a double string in memory
-    function reverses16(string memory text) public pure returns (string memory str) {
+    function reverses16(string memory text) public pure returns (string memory _reverses) {
         assembly {
             // load data length
             let len := mload(text)
@@ -65,16 +63,15 @@ library stringMethod {
                 mstore(add(ptr, sub(i, 1)), shl(mul(sub(len, i), 8), strin))
                 // if eq(i,3){break}
             }
-            mstore(0x00, text)
-            str := text
+            _reverses := text
         }
     }
 
     /// @notice Concatenates two strings
     /// @param a The fit string
     /// @param b The second string
-    /// @return str result The concatenated string
-    function concatenate(string memory a, string memory b) public pure returns (string memory str) {
+    /// @return _conc result The concatenated string
+    function concatenate(string memory a, string memory b) public pure returns (string memory _conc) {
         assembly {
             let red := 0x20
             //pointer to string a
@@ -98,7 +95,7 @@ library stringMethod {
                 //save the length
                 mstore(0x00, ptr)
                 //return the string
-                str := ptr
+                _conc := ptr
             }
             //add length of both string together and store in location of length of string a
             mstore(add(add(ptr, 0x20), len), mload(add(ptrB, 0x20)))
@@ -108,22 +105,23 @@ library stringMethod {
                 mstore(add(ptr, add(mul(i, 0x20), len)), mload(add(ptrB, mul(i, 0x20))))
             }
             //update the free memory
-            //save the length
-            mstore(0x00, ptr)
             //return the string
-            str := ptr
+            _conc := ptr
         }
     }
 
     /// @notice finds a letter in a string
     /// @param str The fit string
     /// @param index The index to get the string
-    /// @return c the searched indexed in bytes
-    function getCharFromStrings(string memory str, uint256 index) public pure returns (bytes1 c) {
+    /// @return _char the searched indexed in bytes
+    function getCharFromStrings(string memory str, uint256 index) public pure returns (bytes1 _char) {
         assembly {
             let ptr := add(str, 0x20)
             let len := mload(str)
-            c := mload(add(ptr, index))
+            _char := mload(add(ptr, index))
         }
     }
+ 
+    
+
 }
